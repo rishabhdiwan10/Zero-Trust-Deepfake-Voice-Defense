@@ -1,0 +1,60 @@
+# =============================================================================
+# liveness_config.yaml
+# Liveness challenge settings: prompt types, timeout, difficulty levels
+#
+# Challenges are DYNAMIC and CONTEXT-AWARE — not fixed phrases — to reduce
+# the risk of replay attacks.
+# =============================================================================
+
+challenge:
+  # Challenge difficulty level: easy | medium | hard
+  # Controls complexity and length of generated prompts
+  difficulty: medium
+
+  # Time (seconds) the user has to respond to a challenge
+  response_timeout_seconds: 10
+
+  # Minimum phoneme diversity required in the challenge phrase
+  min_phoneme_diversity: 5
+
+  # Minimum word count for a challenge phrase
+  min_word_count: 4
+
+  # Maximum word count for a challenge phrase
+  max_word_count: 12
+
+  # Include a timestamp or session-specific token in the challenge
+  # to make replay impossible
+  include_session_token: true
+
+  # Enable challenge phrases that require specific prosody (emotion/tone)
+  prosody_challenges_enabled: true
+
+prompt_types:
+  # Enable / disable individual prompt category types
+  phoneme_rich: true       # Phrases with diverse phoneme coverage
+  date_time: true          # "Say today's date and time: <dynamic value>"
+  random_digits: true      # "Read aloud: 4 7 2 9"
+  contextual_sentence: true  # Context-aware sentence from templates
+  emotional_tone: false    # "Say this in a surprised tone: ..."
+
+randomisation:
+  # Random seed (null = truly random each session)
+  seed: null
+
+  # Number of template candidates to sample from before selecting one
+  candidate_pool_size: 10
+
+  # Shuffle the template pool on each startup
+  shuffle_on_start: true
+
+validation:
+  # Minimum word error rate (WER) allowed for a successful response
+  # Higher WER = more lenient
+  max_allowed_wer: 0.20
+
+  # Minimum cosine similarity between challenge tokens and response tokens
+  min_token_similarity: 0.70
+
+  # Use Whisper to transcribe the response before comparison
+  use_whisper_for_validation: true

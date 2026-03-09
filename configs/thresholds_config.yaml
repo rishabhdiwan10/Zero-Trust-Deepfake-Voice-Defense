@@ -1,0 +1,58 @@
+# =============================================================================
+# thresholds_config.yaml
+# Decision threshold configuration for the trust engine
+#
+# Decision flow:
+#   trust_score >= pass_threshold                  → PASS (genuine audio)
+#   challenge_threshold <= trust_score < pass_threshold → LIVENESS CHALLENGE
+#   trust_score < challenge_threshold              → REJECT (synthetic / attack)
+#
+# Additional quality differentiation:
+#   When the CNN score is low but the quality indicators are also low,
+#   the system should challenge rather than reject (poor-quality genuine audio).
+# =============================================================================
+
+thresholds:
+  # Minimum trust score to unconditionally PASS the audio
+  pass_threshold: 0.80
+
+  # Minimum trust score to trigger a liveness CHALLENGE instead of rejecting
+  challenge_threshold: 0.40
+
+  # Below challenge_threshold the request is REJECTED outright
+  # (implicit: trust_score < challenge_threshold → REJECT)
+
+quality_differentiation:
+  # Enable the poor-quality genuine audio differentiation path
+  enabled: true
+
+  # SNR (dB) below which audio is considered "poor quality"
+  low_snr_threshold_db: 10.0
+
+  # RMS energy below which audio is considered "low energy / poor quality"
+  low_energy_threshold: 0.01
+
+  # If poor quality is detected AND cnn_score is below this value,
+  # escalate to CHALLENGE instead of REJECT (benefit of the doubt)
+  poor_quality_cnn_score_max: 0.60
+
+  # Confidence score returned by quality checks (0–1)
+  # Above this, audio quality is considered acceptable
+  quality_confidence_min: 0.50
+
+per_layer_weights:
+  # Weights used by TrustScorer to aggregate multi-layer scores
+  # Must sum to 1.0
+  cnn_score: 0.50
+  whisper_score: 0.30
+  liveness_score: 0.20
+
+actions:
+  # Maximum number of liveness challenge retries before hard reject
+  max_liveness_retries: 2
+
+  # On a hard REJECT, whether to log the audio hash for audit
+  log_rejected_audio: true
+
+  # On a PASS, whether to emit an access-granted event
+  emit_access_granted_event: true

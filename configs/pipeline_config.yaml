@@ -1,0 +1,58 @@
+# =============================================================================
+# pipeline_config.yaml
+# End-to-end pipeline settings, async/streaming options
+# =============================================================================
+
+pipeline:
+  # Pipeline mode: realtime | batch
+  mode: realtime
+
+  # Enable async / concurrent processing across pipeline layers
+  async_enabled: true
+
+  # Maximum concurrent audio samples processed at once
+  max_concurrent: 4
+
+  # Overall pipeline timeout in seconds (0 = no limit)
+  pipeline_timeout_seconds: 5.0
+
+  # Enable streaming input (chunk-by-chunk processing)
+  streaming: true
+
+  # Audio chunk size in seconds for streaming mode
+  stream_chunk_seconds: 0.5
+
+audio:
+  # Target sample rate (Hz) — all audio resampled to this
+  sample_rate: 16000
+
+  # Audio bit depth
+  bit_depth: 16
+
+  # Number of channels (1 = mono)
+  channels: 1
+
+  # Minimum audio duration in seconds (shorter clips are padded or rejected)
+  min_duration_seconds: 1.0
+
+  # Maximum audio duration in seconds (longer clips are truncated)
+  max_duration_seconds: 10.0
+
+layers:
+  # Toggle individual pipeline layers on/off
+  forensic_cnn: true
+  whisper_analysis: true
+  liveness_challenge: true
+
+  # Run forensic_cnn and whisper_analysis in parallel to reduce latency
+  parallel_forensic_whisper: true
+
+output:
+  # Return raw per-layer scores in the response payload
+  include_layer_scores: true
+
+  # Include transcription from Whisper in the response
+  include_transcription: false
+
+  # Log every pipeline invocation
+  log_every_request: true

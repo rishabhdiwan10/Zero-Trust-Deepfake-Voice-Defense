@@ -1,0 +1,129 @@
+# =============================================================================
+# Python
+# =============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+pytestdebug.log
+
+# =============================================================================
+# Machine Learning / Deep Learning Artifacts
+# =============================================================================
+# Model checkpoints
+models/*.pt
+models/*.pth
+models/*.ckpt
+models/*.h5
+models/*.pkl
+models/*.bin
+models/*.safetensors
+
+# TensorBoard logs
+runs/
+logs/
+*.log
+
+# MLflow
+mlruns/
+
+# =============================================================================
+# Data Files
+# =============================================================================
+data/raw/
+data/processed/
+data/external/
+*.wav
+*.flac
+*.mp3
+*.ogg
+*.m4a
+*.csv
+*.tsv
+*.parquet
+*.hdf5
+
+# =============================================================================
+# Jupyter Notebooks
+# =============================================================================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# =============================================================================
+# IDE / Editor
+# =============================================================================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# =============================================================================
+# OS
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# =============================================================================
+# Environment / Secrets
+# =============================================================================
+.env
+.env.*
+*.env
+secrets.yaml
+secrets.json
+api_keys.txt
+
+# =============================================================================
+# Misc
+# =============================================================================
+*.orig
+*.bak
+tmp/
+temp/
