@@ -1,0 +1,55 @@
+# Zero-Trust Deepfake Voice Defense System
+# Core ML / Audio
+torch>=2.1.0
+torchaudio>=2.1.0
+librosa>=0.10.1
+numpy>=1.24.0
+scipy>=1.11.0
+scikit-learn>=1.3.0
+soundfile>=0.12.1
+
+# Feature extraction / signal processing
+python-speech-features>=0.6
+
+# LangGraph / LangChain / Orchestration
+langgraph>=0.0.40
+langchain>=0.1.0
+langchain-openai>=0.0.5
+
+# Whisper (OpenAI open-source)
+openai-whisper>=20231117
+
+# HTTP / API / Serving
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+httpx>=0.25.0
+
+# Configuration
+pyyaml>=6.0.1
+pydantic>=2.4.0
+
+# Data handling
+pandas>=2.1.0
+tqdm>=4.66.0
+
+# Visualization
+matplotlib>=3.8.0
+seaborn>=0.13.0
+
+# Notebooks
+jupyter>=1.0.0
+ipykernel>=6.26.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+
+# Code quality
+black>=23.10.0
+isort>=5.12.0
+flake8>=6.1.0
+
+# Benchmarking / profiling
+py-spy>=0.3.14
+memory-profiler>=0.61.0

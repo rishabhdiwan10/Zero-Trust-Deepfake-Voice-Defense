@@ -1,0 +1,58 @@
+# =============================================================================
+# latency_config.yaml
+# Latency budgets per pipeline layer, profiling toggles
+#
+# All values are in milliseconds (ms) unless stated otherwise.
+# =============================================================================
+
+budgets:
+  # Maximum allowed latency for audio preprocessing and feature extraction
+  preprocessing_ms: 50
+
+  # Maximum allowed latency for CNN deepfake detection inference
+  cnn_inference_ms: 100
+
+  # Maximum allowed latency for Whisper transcription / artifact analysis
+  whisper_inference_ms: 500
+
+  # Maximum allowed latency for LLM-based decision agent reasoning
+  llm_decision_ms: 300
+
+  # Maximum allowed latency for liveness challenge generation
+  challenge_generation_ms: 50
+
+  # Maximum allowed end-to-end pipeline latency (excluding liveness challenge)
+  total_pipeline_ms: 1000
+
+profiling:
+  # Enable latency profiling instrumentation (adds minor overhead)
+  enabled: true
+
+  # Log per-layer latency for every request
+  log_per_request: false
+
+  # Log per-layer latency when budget is exceeded
+  log_on_budget_exceeded: true
+
+  # Output profiling report to file (null = stdout only)
+  report_file: null
+
+  # Enable Python cProfile-based profiling (for development only)
+  cprofile_enabled: false
+
+optimisation:
+  # Enable torch.compile() on the CNN model (PyTorch 2.x+)
+  torch_compile: false
+
+  # Use half-precision (FP16) for inference
+  fp16_inference: true
+
+  # Whisper model size to balance accuracy vs. speed:
+  # tiny | base | small | medium | large-v3
+  whisper_model_size: base
+
+  # Cache Whisper model in memory between requests
+  cache_whisper_model: true
+
+  # Number of threads for CPU inference
+  cpu_threads: 4

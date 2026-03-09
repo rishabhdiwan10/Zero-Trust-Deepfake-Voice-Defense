@@ -1,0 +1,73 @@
+# =============================================================================
+# model_config.yaml
+# CNN Deepfake Audio Detector — model architecture and training hyperparameters
+# =============================================================================
+
+model:
+  # Backbone architecture: resnet18 | resnet34 | resnet50 | efficientnet_b0 | efficientnet_b2
+  backbone: resnet34
+
+  # Number of output classes (0 = genuine, 1 = synthetic)
+  num_classes: 2
+
+  # Input feature type fed to the CNN: mel_spectrogram | mfcc | lfcc | combined
+  input_feature: mel_spectrogram
+
+  # Spectrogram / feature dimensions [channels, freq_bins, time_frames]
+  input_shape: [1, 128, 128]
+
+  # Dropout probability for the classifier head
+  dropout: 0.3
+
+  # Pretrained ImageNet weights for the backbone (transfer learning)
+  pretrained: true
+
+training:
+  # Number of training epochs
+  epochs: 50
+
+  # Batch size (reduce if GPU OOM)
+  batch_size: 32
+
+  # Learning rate
+  learning_rate: 0.0001
+
+  # LR scheduler: cosine | step | none
+  lr_scheduler: cosine
+
+  # Step size for StepLR scheduler (ignored if scheduler != step)
+  lr_step_size: 10
+
+  # Gamma for StepLR (ignored if scheduler != step)
+  lr_gamma: 0.5
+
+  # Adam weight decay
+  weight_decay: 0.0001
+
+  # Training / validation split ratio
+  val_split: 0.15
+
+  # Random seed for reproducibility
+  seed: 42
+
+  # Enable mixed-precision (FP16) training
+  mixed_precision: true
+
+  # Gradient clipping value (0 to disable)
+  gradient_clip: 1.0
+
+  # Early stopping patience (epochs without improvement; 0 to disable)
+  early_stopping_patience: 10
+
+checkpointing:
+  # Directory to save model checkpoints
+  checkpoint_dir: models/
+
+  # Save checkpoint every N epochs
+  save_every: 5
+
+  # Keep only the N best checkpoints
+  keep_top_k: 3
+
+  # Metric to monitor for best checkpoint selection
+  monitor_metric: val_auc
