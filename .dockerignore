@@ -1,0 +1,55 @@
+# =============================================================================
+# .dockerignore — Zero-Trust Deepfake Voice Defense System
+# =============================================================================
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git metadata
+.git/
+.gitignore
+
+# Large data / checkpoint directories (mount as volumes instead)
+data/
+models/
+
+# Secrets / environment files
+.env
+.env.*
+*.key
+*.pem
+
+# Editor / IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Pytest / coverage cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+
+# Profiling outputs
+*.prof
