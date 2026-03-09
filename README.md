@@ -87,6 +87,71 @@ pip install -e .
 
 ---
 
+## Docker Usage
+
+### CPU (default)
+
+```bash
+# Build and start the Streamlit web UI
+docker-compose up --build
+
+# Open http://localhost:8501 in your browser
+```
+
+### GPU (NVIDIA CUDA)
+
+```bash
+# Requires nvidia-container-toolkit on the host
+docker-compose --profile gpu up --build
+```
+
+Datasets and model checkpoints are persisted via volume mounts (`./data` and `./models`) so they survive container restarts.
+
+---
+
+## Streamlit Web UI
+
+```bash
+# Run locally (without Docker)
+streamlit run app.py
+```
+
+Then open **http://localhost:8501**.
+
+The UI provides:
+- **Upload Audio** — analyse a `.wav`, `.flac`, `.mp3`, `.ogg`, or `.m4a` file
+- **Record Audio** — capture live audio from your microphone for instant analysis
+- **Batch Analysis** — upload and analyse multiple files at once
+- **Liveness Challenge** — interactive challenge/response flow when trust score is uncertain
+
+> **Note:** Train the CNN model first with `python scripts/train.py` so the UI loads a meaningful checkpoint.  
+> Without a trained checkpoint the pipeline will still run with random (untrained) weights.
+
+---
+
+## Dataset Download Instructions
+
+The system supports the following datasets out of the box.  Download them and
+place them under `data/` before training.
+
+| Dataset | URL | Expected directory |
+|---------|-----|--------------------|
+| **ASVspoof 2019 LA** | [https://datashare.ed.ac.uk/handle/10283/3336](https://datashare.ed.ac.uk/handle/10283/3336) | `data/asvspoof2019/` |
+| **ASVspoof 5** | [https://www.asvspoof.org/index2024.html](https://www.asvspoof.org/index2024.html) | `data/asvspoof5/` |
+| **In-The-Wild** | [https://deepfake-demo.aisec.fraunhofer.de/in_the_wild](https://deepfake-demo.aisec.fraunhofer.de/in_the_wild) | `data/in_the_wild/` |
+| **Custom** | Your own recordings | `data/custom/genuine/` + `data/custom/synthetic/` |
+
+After downloading, run:
+
+```bash
+python scripts/train.py \
+    --config configs/model_config.yaml \
+    --data-dir data/asvspoof2019 \
+    --dataset asvspoof2019
+```
+
+---
+
 ## Quick Start
 
 ```python

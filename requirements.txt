@@ -24,6 +24,9 @@ fastapi>=0.104.0
 uvicorn[standard]>=0.24.0
 httpx>=0.25.0
 
+# Streamlit Web UI
+streamlit>=1.30.0
+
 # Configuration
 pyyaml>=6.0.1
 pydantic>=2.4.0

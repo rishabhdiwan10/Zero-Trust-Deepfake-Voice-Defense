@@ -1,0 +1,75 @@
+# =============================================================================
+# docker-compose.yml — Zero-Trust Deepfake Voice Defense System
+# =============================================================================
+#
+# Usage (CPU, default):
+#   docker-compose up --build
+#
+# Usage (GPU, requires NVIDIA Container Toolkit on the host):
+#   docker-compose --profile gpu up --build
+#
+# Open the Streamlit UI at:  http://localhost:8501
+#
+# Data and model checkpoints are persisted via bind-mounts so they survive
+# container restarts.  Place dataset files in ./data/ and the system will
+# pick them up automatically; trained checkpoints are written to ./models/.
+# =============================================================================
+
+version: "3.9"
+
+services:
+
+  # ---------------------------------------------------------------------------
+  # app — Streamlit web UI (CPU)
+  # ---------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ztdvd:latest
+    container_name: ztdvd_app
+    ports:
+      - "8501:8501"
+    volumes:
+      # Mount dataset and model directories so data persists outside the container
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      # Override these to customise pipeline behaviour at runtime
+      - ZTDVD_DEVICE=cpu
+      - STREAMLIT_SERVER_MAX_UPLOAD_SIZE=200   # MB — increase for large audio files
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # app-gpu — Streamlit web UI (NVIDIA GPU)
+  # Activate with:  docker-compose --profile gpu up --build
+  # ---------------------------------------------------------------------------
+  app-gpu:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ztdvd:latest
+    container_name: ztdvd_app_gpu
+    profiles:
+      - gpu
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+    environment:
+      - ZTDVD_DEVICE=cuda
+      - STREAMLIT_SERVER_MAX_UPLOAD_SIZE=200
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
