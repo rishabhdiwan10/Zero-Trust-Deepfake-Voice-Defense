@@ -64,6 +64,7 @@ def _load_pipeline():
     try:
         from src.models.cnn_detector import CNNDetector
         from src.models.whisper_analyzer import WhisperAnalyzer
+        from src.models.prosody_analyzer import ProsodyAnalyzer
         from src.data.audio_preprocessor import AudioPreprocessor
         from src.data.feature_extractor import FeatureExtractor, FeatureType
         from src.agents.forensic_agent import ForensicAgent
@@ -114,12 +115,16 @@ def _load_pipeline():
             feature_type=FeatureType(m_cfg.get("input_feature", "mel_spectrogram"))
         )
 
+        # Prosody analyzer
+        prosody = ProsodyAnalyzer(sample_rate=16_000)
+
         # Agents
         forensic_agent = ForensicAgent(
             cnn_detector=cnn,
             whisper_analyzer=whisper,
             feature_extractor=feature_extractor,
             preprocessor=preprocessor,
+            prosody_analyzer=prosody,
             run_parallel=True,
         )
 
@@ -193,9 +198,10 @@ def _verdict_ui(result: Dict[str, Any]) -> None:
     col_score.metric("Trust Score", f"{trust_score:.2%}")
     col_bar.progress(min(max(trust_score, 0.0), 1.0))
 
-    # ── CNN / Whisper scores ──────────────────────────────────────────────
+    # ── CNN / Whisper / Prosody scores ──────────────────────────────────
+    prosody_score = result.get("prosody_score", 0.0)
     st.subheader("Score Breakdown")
-    c1, c2 = st.columns(2)
+    c1, c2, c3 = st.columns(3)
     c1.metric(
         "CNN Detector Score",
         f"{cnn_score:.2%}",
@@ -205,6 +211,11 @@ def _verdict_ui(result: Dict[str, Any]) -> None:
         "Whisper Analyzer Score",
         f"{whisper_score:.2%}",
         help="Genuine probability derived from Whisper log-probabilities.",
+    )
+    c3.metric(
+        "Prosody / Rhythm Score",
+        f"{prosody_score:.2%}",
+        help="Genuine probability based on pitch variability, jitter, shimmer, and rhythm patterns.",
     )
 
     # ── Transcription ─────────────────────────────────────────────────────
@@ -333,7 +344,7 @@ def main() -> None:
                         if challenge_phrase:
                             st.info(
                                 "Please read aloud the following phrase:\n\n"
-                                f'**\u201c{challenge_phrase}\u201d**'  # " and " curly quotes
+                                f'**\u201c{challenge_phrase}\u201d**'
                             )
                         else:
                             st.info("Please record your response to complete verification.")
@@ -390,7 +401,7 @@ def main() -> None:
                         if challenge_phrase:
                             st.info(
                                 "Please read aloud the following phrase:\n\n"
-                                f'**\u201c{challenge_phrase}\u201d**'  # " and " curly quotes
+                                f'**\u201c{challenge_phrase}\u201d**'
                             )
 
                         response_audio = st.audio_input(
@@ -443,6 +454,7 @@ def main() -> None:
                         "Trust Score": f"{result.get('trust_score', 0):.2%}",
                         "CNN Score": f"{result.get('cnn_score', 0):.2%}",
                         "Whisper Score": f"{result.get('whisper_score', 0):.2%}",
+                        "Prosody Score": f"{result.get('prosody_score', 0):.2%}",
                         "Error": result.get("error") or "—",
                     }
                 )

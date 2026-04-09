@@ -37,6 +37,8 @@ class PipelineState(TypedDict, total=False):
         Genuine probability from the CNN detector [0, 1].
     whisper_score : float
         Genuine probability from Whisper analysis [0, 1].
+    prosody_score : float
+        Genuine probability from prosody/rhythm analysis [0, 1].
     transcription : str
         Whisper transcription of the audio.
     forensic_metadata : dict
@@ -72,6 +74,7 @@ class PipelineState(TypedDict, total=False):
     # Forensic analysis outputs
     cnn_score: float
     whisper_score: float
+    prosody_score: float
     transcription: str
     forensic_metadata: Dict[str, Any]
 
