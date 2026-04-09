@@ -67,6 +67,7 @@ class DecisionAgent:
 
         cnn_score = state.get("cnn_score", 0.5)
         whisper_score = state.get("whisper_score", 0.5)
+        prosody_score = state.get("prosody_score", 0.5)
         liveness_passed = state.get("liveness_passed")
         forensic_metadata = state.get("forensic_metadata", {})
 
@@ -74,6 +75,7 @@ class DecisionAgent:
         trust_score = self.trust_scorer.score(
             cnn_score=cnn_score,
             whisper_score=whisper_score,
+            prosody_score=prosody_score,
             liveness_passed=liveness_passed,
         )
         state["trust_score"] = trust_score

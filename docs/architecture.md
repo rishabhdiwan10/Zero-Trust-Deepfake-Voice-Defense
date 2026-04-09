@@ -8,49 +8,47 @@ orchestration, and dynamic liveness verification.
 
 ## Architecture Diagram
 
-```
 ┌──────────────────────────────────────────────────────────────┐
-│                   Audio Input (Real-Time)                    │
+│ Audio Input (Real-Time) │
 └──────────────────────┬───────────────────────────────────────┘
-                       │
-           ┌───────────▼───────────┐
-           │   Audio Preprocessor  │  Resampling (→ 16 kHz mono)
-           │   + Feature Extractor │  Mel-spectrogram / MFCC / LFCC
-           └───────────┬───────────┘
-                       │
-           ┌───────────▼───────────────────────────────────────┐
-           │                  Forensic Agent                   │
-           │  ┌─────────────────┐   ┌─────────────────────┐   │
-           │  │  CNN Detector   │   │  Whisper Analyser   │   │
-           │  │ (ResNet / ENet) │   │  (Transcription +   │   │
-           │  │ cnn_score [0,1] │   │  Artifact Analysis) │   │
-           │  └────────┬────────┘   └──────────┬──────────┘   │
-           └───────────┼───────────────────────┼───────────────┘
-                       │                       │
-           ┌───────────▼───────────────────────▼───────────────┐
-           │                 Decision Agent                     │
-           │  TrustScorer: weighted combination of all scores   │
-           │  ThresholdEngine: pass / challenge / reject        │
-           └───────┬─────────────────────┬──────────┬──────────┘
-                   │                     │          │
-                PASS               CHALLENGE     REJECT
-                   │                     │          │
-                   │          ┌──────────▼──────┐   │
-                   │          │  Liveness Agent │   │
-                   │          │ ChallengeGen    │   │
-                   │          │ ResponseValidator│  │
-                   │          └──────────┬──────┘   │
-                   │                     │           │
-                   │          ┌──────────▼──────┐   │
-                   │          │  Decision Agent │   │
-                   │          │  (re-evaluate)  │   │
-                   │          └──────────┬──────┘   │
-                   │                     │           │
-           ┌───────▼─────────────────────▼───────────▼──────────┐
-           │                   Action Router                     │
-           │       "pass" | "challenge" | "reject"               │
-           └─────────────────────────────────────────────────────┘
-```
+│
+┌───────────▼───────────┐
+│ Audio Preprocessor │ Resampling (→ 16 kHz mono)
+│ + Feature Extractor │ Mel-spectrogram / MFCC / LFCC
+└───────────┬───────────┘
+│
+┌───────────▼───────────────────────────────────────┐
+│ Forensic Agent │
+│ ┌─────────────────┐ ┌─────────────────────┐ │
+│ │ CNN Detector │ │ Whisper Analyser │ │
+│ │ (ResNet / ENet) │ │ (Transcription + │ │
+│ │ cnn_score [0,1] │ │ Artifact Analysis) │ │
+│ └────────┬────────┘ └──────────┬──────────┘ │
+└───────────┼───────────────────────┼───────────────┘
+│ │
+┌───────────▼───────────────────────▼───────────────┐
+│ Decision Agent │
+│ TrustScorer: weighted combination of all scores │
+│ ThresholdEngine: pass / challenge / reject │
+└───────┬─────────────────────┬──────────┬──────────┘
+│ │ │
+PASS CHALLENGE REJECT
+│ │ │
+│ ┌──────────▼──────┐ │
+│ │ Liveness Agent │ │
+│ │ ChallengeGen │ │
+│ │ ResponseValidator│ │
+│ └──────────┬──────┘ │
+│ │ │
+│ ┌──────────▼──────┐ │
+│ │ Decision Agent │ │
+│ │ (re-evaluate) │ │
+│ └──────────┬──────┘ │
+│ │ │
+┌───────▼─────────────────────▼───────────▼──────────┐
+│ Action Router │
+│ "pass" | "challenge" | "reject" │
+└────────────────────────────────────────────────
 
 ## Component Descriptions
 
@@ -73,6 +71,20 @@ Returns `genuine_prob` and `synthetic_prob`.
 Uses OpenAI Whisper's internal confidence signals (avg_logprob, compression
 ratio, no_speech_prob) to detect synthetic speech artefacts beyond raw
 transcription.
+
+### Prosody / Rhythm Analyser (`src/models/prosody_analyzer.py`)
+Analyses temporal and rhythmic characteristics that distinguish human speech
+from TTS-generated audio:
+- **Pitch (F0) variability**: Humans exhibit natural micro-variations;
+  synthetic speech tends toward smoother, uniform contours.
+- **Jitter & shimmer**: Cycle-to-cycle variations in pitch period and
+  amplitude are present in natural speech but often absent in TTS output.
+- **Speaking rate & pause patterns**: Natural speech has variable timing and
+  hesitation pauses; TTS systems produce mechanical, uniform timing.
+- **Spectral flux**: Frame-to-frame spectral change is higher and more
+  variable in human speech.
+
+Returns `prosody_score` in [0, 1] representing genuine probability.
 
 ### LangGraph Orchestrator (`src/agents/orchestrator.py`)
 Defines the stateful agent graph. Uses conditional edges so the liveness

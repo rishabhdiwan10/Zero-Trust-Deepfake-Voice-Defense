@@ -43,8 +43,9 @@ quality_differentiation:
 per_layer_weights:
   # Weights used by TrustScorer to aggregate multi-layer scores
   # Must sum to 1.0
-  cnn_score: 0.50
-  whisper_score: 0.30
+  cnn_score: 0.40
+  whisper_score: 0.25
+  prosody_score: 0.15
   liveness_score: 0.20
 
 actions:
