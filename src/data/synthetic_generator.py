@@ -160,7 +160,7 @@ class SyntheticGenerator:
         the ``api_key`` constructor parameter.
         """
         try:
-            from elevenlabs import generate, save  # type: ignore
+            from elevenlabs.client import ElevenLabs  # type: ignore
         except ImportError as exc:
             raise ImportError(
                 "ElevenLabs package not installed. Run: pip install elevenlabs"
@@ -172,8 +172,16 @@ class SyntheticGenerator:
                 "ElevenLabs API key is required. Set ELEVENLABS_API_KEY env var."
             )
 
-        audio = generate(text=text, api_key=api_key)
-        save(audio, str(output_path))
+        client = ElevenLabs(api_key=api_key)
+        audio_generator = client.text_to_speech.convert(
+            text=text,
+            voice_id="JBFqnCBsd6RMkjVDRZzb",
+            model_id="eleven_flash_v2_5",
+            output_format="mp3_44100_128",
+        )
+        with open(str(output_path), "wb") as f:
+            for chunk in audio_generator:
+                f.write(chunk)
         return self._get_duration(output_path)
 
     def _generate_bark(self, text: str, output_path: Path) -> float:
