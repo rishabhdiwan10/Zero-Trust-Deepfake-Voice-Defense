@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         ffmpeg \
         build-essential \
         git \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 # =============================================================================

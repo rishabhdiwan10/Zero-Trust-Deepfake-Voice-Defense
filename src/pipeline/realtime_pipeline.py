@@ -102,7 +102,9 @@ class RealtimePipeline:
             "whisper_score": round(final_state.get("whisper_score", 0.0), 4),
             "prosody_score": round(final_state.get("prosody_score", 0.5), 4),
             "transcription": final_state.get("transcription", ""),
+            "forensic_metadata": final_state.get("forensic_metadata", {}),
             "liveness_passed": final_state.get("liveness_passed"),
+            "liveness_challenge": final_state.get("liveness_challenge", ""),
             "stage_latencies": latencies,
             "error": final_state.get("error"),
         }
