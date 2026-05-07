@@ -1,0 +1,80 @@
+{
+  "In-The-Wild": {
+    "genuine_count": 10703,
+    "synthetic_count": 6465,
+    "total": 17168,
+    "genuine_durations_mean": 3.8663520833333327,
+    "genuine_durations_std": 2.8942337533232987,
+    "synthetic_durations_mean": 5.302617916666667,
+    "synthetic_durations_std": 4.111336470779965,
+    "genuine_centroids_mean": 1608.4669817810693,
+    "genuine_centroids_std": 391.01266511615,
+    "synthetic_centroids_mean": 1530.4712700173636,
+    "synthetic_centroids_std": 392.4159962020384,
+    "genuine_zcrs_mean": 0.11649896874198575,
+    "genuine_zcrs_std": 0.039800189782297726,
+    "synthetic_zcrs_mean": 0.13334382169484124,
+    "synthetic_zcrs_std": 0.04838746267077932,
+    "genuine_rms_mean": 0.045908398551788805,
+    "genuine_rms_std": 0.030066152909025777,
+    "synthetic_rms_mean": 0.03638334915662805,
+    "synthetic_rms_std": 0.018942067417382732
+  },
+  "ASVspoof 2019 LA": {
+    "genuine_count": 1053,
+    "synthetic_count": 0,
+    "total": 1053,
+    "genuine_durations_mean": 3.32570427852349,
+    "genuine_durations_std": 1.475600138006058,
+    "genuine_centroids_mean": 1755.915727821645,
+    "genuine_centroids_std": 274.6987784795212,
+    "genuine_zcrs_mean": 0.12367980581000103,
+    "genuine_zcrs_std": 0.03164505263926263,
+    "genuine_rms_mean": 0.09692841808267888,
+    "genuine_rms_std": 0.031102706923224643
+  },
+  "Synthetic (TTS)": {
+    "genuine_count": 0,
+    "synthetic_count": 143,
+    "total": 143,
+    "synthetic_durations_mean": 4.663630337916052,
+    "synthetic_durations_std": 0.825657938403383,
+    "synthetic_centroids_mean": 1737.0062247740523,
+    "synthetic_centroids_std": 174.70044362088825,
+    "synthetic_zcrs_mean": 0.13411940001747474,
+    "synthetic_zcrs_std": 0.024499823836735803,
+    "synthetic_rms_mean": 0.08119795124951776,
+    "synthetic_rms_std": 0.010308392744875536
+  },
+  "Balanced": {
+    "genuine_count": 1719,
+    "synthetic_count": 0,
+    "total": 1719,
+    "genuine_durations_mean": 4.369737916666666,
+    "genuine_durations_std": 3.5103326069759806,
+    "genuine_centroids_mean": 1552.7534817459737,
+    "genuine_centroids_std": 367.32740939623807,
+    "genuine_zcrs_mean": 0.1188768700315056,
+    "genuine_zcrs_std": 0.03759220981831085,
+    "genuine_rms_mean": 0.04365606850148955,
+    "genuine_rms_std": 0.027680631161699817
+  },
+  "Other: __MACOSX": {
+    "genuine_count": 143,
+    "synthetic_count": 0,
+    "total": 143
+  },
+  "Other: combined": {
+    "genuine_count": 3438,
+    "synthetic_count": 0,
+    "total": 3438,
+    "genuine_durations_mean": 4.195451669501134,
+    "genuine_durations_std": 3.4963761958273505,
+    "genuine_centroids_mean": 1528.3128538012174,
+    "genuine_centroids_std": 375.1295492552841,
+    "genuine_zcrs_mean": 0.11402254987081516,
+    "genuine_zcrs_std": 0.04165463201303016,
+    "genuine_rms_mean": 0.042684588907286526,
+    "genuine_rms_std": 0.024656149967445962
+  }
+}
