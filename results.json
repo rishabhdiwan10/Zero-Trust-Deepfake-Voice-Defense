@@ -1,0 +1,39 @@
+{
+  "dataset": "in_the_wild",
+  "model": "ResNet18 CNN",
+  "checkpoint": "models/best_checkpoint.pt",
+  "epoch": 18,
+  "dataset_info": {
+    "genuine": 10703,
+    "synthetic": 6465,
+    "total": 17168
+  },
+  "metrics": {
+    "eer": 0.0012,
+    "roc_auc": 0.9999,
+    "accuracy": 0.9992,
+    "val_loss": 0.0074,
+    "val_auc": 0.9996,
+    "val_accuracy": 0.9985
+  },
+  "confusion_matrix": {
+    "TP": 10698,
+    "FP": 5,
+    "FN": 8,
+    "TN": 6457
+  },
+  "classification_report": {
+    "genuine":   {"precision": 1.00, "recall": 1.00, "f1": 1.00},
+    "synthetic": {"precision": 1.00, "recall": 1.00, "f1": 1.00},
+    "accuracy": 0.9992,
+    "macro_avg": {"precision": 1.00, "recall": 1.00, "f1": 1.00}
+  },
+  "training_info": {
+    "epochs": 30,
+    "best_epoch": 18,
+    "train_loss": 0.0045,
+    "early_stopping": true,
+    "device": "cuda",
+    "gpu": "Tesla V100-PCIE-32GB"
+  }
+}
