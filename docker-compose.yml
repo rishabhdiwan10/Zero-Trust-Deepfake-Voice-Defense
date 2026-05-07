@@ -15,7 +15,6 @@
 # pick them up automatically; trained checkpoints are written to ./models/.
 # =============================================================================
 
-version: "3.9"
 
 services:
 
