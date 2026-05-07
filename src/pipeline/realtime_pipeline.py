@@ -168,7 +168,9 @@ class RealtimePipeline:
             "whisper_score": 0.0,
             "prosody_score": 0.0,
             "transcription": "",
+            "forensic_metadata": {},
             "liveness_passed": None,
+            "liveness_challenge": "",
             "stage_latencies": {},
             "error": message,
         }

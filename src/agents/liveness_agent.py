@@ -93,6 +93,7 @@ class LivenessAgent:
             logger.warning(
                 "LivenessAgent called with existing challenge but no response_path."
             )
+            state["liveness_retry_count"] = state.get("liveness_retry_count", 0) + 1
 
         elapsed_ms = (time.perf_counter() - t_start) * 1000
         latencies = state.get("stage_latencies", {})
