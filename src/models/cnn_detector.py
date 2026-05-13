@@ -104,8 +104,8 @@ class CNNDetector:
             probs = F.softmax(logits, dim=1).squeeze(0).cpu().numpy()
 
         return {
-            "genuine_prob": float(probs[0]),
-            "synthetic_prob": float(probs[1]),
+            "genuine_prob": float(probs[1]),
+            "synthetic_prob": float(probs[0]),
             "prediction": int(np.argmax(probs)),
         }
 
@@ -141,8 +141,8 @@ class CNNDetector:
         for p in probs:
             results.append(
                 {
-                    "genuine_prob": float(p[0]),
-                    "synthetic_prob": float(p[1]),
+                    "genuine_prob": float(p[1]),
+                    "synthetic_prob": float(p[0]),
                     "prediction": int(np.argmax(p)),
                 }
             )
