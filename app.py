@@ -128,13 +128,13 @@ def _load_pipeline():
             run_parallel=True,
         )
 
-        trust_scorer = TrustScorer(threshold_cfg)
-        threshold_engine = ThresholdEngine(threshold_cfg)
-        action_router = ActionRouter(threshold_cfg)
+        trust_scorer = TrustScorer()
+        threshold_engine = ThresholdEngine()
+        action_router = ActionRouter()
         decision_agent = DecisionAgent(trust_scorer, threshold_engine, action_router)
 
-        challenge_gen = ChallengeGenerator(liveness_cfg)
-        response_validator = ResponseValidator(liveness_cfg)
+        challenge_gen = ChallengeGenerator()
+        response_validator = ResponseValidator()
         liveness_agent = LivenessAgent(challenge_gen, response_validator)
 
         orchestrator = Orchestrator(forensic_agent, decision_agent, liveness_agent).build()
