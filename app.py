@@ -815,7 +815,7 @@ def main() -> None:
                         "REJECT": "color:#ef4444;font-weight:700"}.get(val, "")
 
             st.dataframe(
-                df.style.applymap(_colour_decision, subset=["Decision"]),
+                df.style.map(_colour_decision, subset=["Decision"]),
                 use_container_width=True,
             )
 
