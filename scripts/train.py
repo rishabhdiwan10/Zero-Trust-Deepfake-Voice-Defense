@@ -5,14 +5,14 @@ Training script for the CNN deepfake audio detector.
 
 Usage::
 
-    python scripts/train.py --config configs/model_config.yaml \\
-                            --data-dir data/asvspoof2019 \\
+    python scripts/train.py --config configs/model_config.yaml \
+                            --data-dir data/asvspoof2019 \
                             --dataset asvspoof2019
 
     # With a separate validation directory:
-    python scripts/train.py --config configs/model_config.yaml \\
-                            --data-dir data/asvspoof2019/train \\
-                            --val-dir data/asvspoof2019/dev \\
+    python scripts/train.py --config configs/model_config.yaml \
+                            --data-dir data/asvspoof2019/train \
+                            --val-dir data/asvspoof2019/dev \
                             --dataset asvspoof2019
 
 Run ``python scripts/train.py --help`` for all options.
@@ -66,6 +66,8 @@ class DeepfakeAudioDataset:
     cache_features : bool
         If ``True``, extract all features once and cache in memory.
         Use only when the dataset fits in RAM.
+    augment : bool
+        If ``True``, apply microphone recording augmentations during training.
     """
 
     def __init__(
@@ -74,6 +76,7 @@ class DeepfakeAudioDataset:
         preprocessor: AudioPreprocessor,
         feature_extractor: FeatureExtractor,
         cache_features: bool = False,
+        augment: bool = False,
     ) -> None:
         import torch
         from torch.utils.data import Dataset as TorchDataset
@@ -83,6 +86,7 @@ class DeepfakeAudioDataset:
         self._feature_extractor = feature_extractor
         self._cache: dict = {}
         self._torch = torch
+        self._augment = augment
 
         if cache_features:
             logger.info("Pre-caching %d samples …", len(samples))
@@ -116,6 +120,27 @@ class DeepfakeAudioDataset:
                 str(sample.file_path), dtype="float32", always_2d=False
             )
             waveform, sr = self._preprocessor.process(waveform, sr)
+
+            # ── Microphone augmentation (training only) ──────────────────
+            if self._augment:
+                import librosa
+
+                # 1. Random volume shift — mics vary in gain
+                waveform = waveform * random.uniform(0.7, 1.3)
+
+                # 2. Light background noise — simulates room noise
+                noise = np.random.normal(0, 0.005, waveform.shape).astype(np.float32)
+                waveform = waveform + noise
+
+                # 3. Browser resample artifact: 16k → 44.1k → 16k
+                #    This is what Streamlit's st.audio_input does internally
+                waveform_up = librosa.resample(waveform, orig_sr=16000, target_sr=44100)
+                waveform = librosa.resample(waveform_up, orig_sr=44100, target_sr=16000)
+
+                # 4. Clip to valid audio range
+                waveform = np.clip(waveform, -1.0, 1.0)
+            # ────────────────────────────────────────────────────────────
+
             features = self._feature_extractor.extract(waveform)  # (C, H, W)
             tensor = self._torch.from_numpy(features).float()
             label = self._torch.tensor(sample.label, dtype=self._torch.long)
@@ -278,15 +303,18 @@ def main() -> None:
             val_split * 100,
         )
 
+    # augment=True for training, False for validation
     train_dataset = DeepfakeAudioDataset(
         samples=train_samples,
         preprocessor=preprocessor,
         feature_extractor=feature_extractor,
+        augment=True,
     )
     val_dataset = DeepfakeAudioDataset(
         samples=val_samples,
         preprocessor=preprocessor,
         feature_extractor=feature_extractor,
+        augment=False,
     )
 
     batch_size = train_cfg.get("batch_size", 32)
@@ -416,7 +444,7 @@ def main() -> None:
                 import torch.nn.functional as F
                 probs = F.softmax(logits, dim=1).cpu().numpy()
                 preds = probs.argmax(axis=1).tolist()
-                synthetic_probs = probs[:, 1].tolist()  # P(synthetic)
+                synthetic_probs = probs[:, 1].tolist()
 
                 all_labels.extend(labels.cpu().tolist())
                 all_probs.extend(synthetic_probs)
